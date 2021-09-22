@@ -11,17 +11,21 @@ let books = [];
 
 app.post("/book", (req, res) => {
     const book = req.body;
-    console.log(book);
+
+    const bookNo = books.length;
+
     books.push(book);
 
-    res.send("Book has been added to the database");
-    console.log(`Book name is ${book.name}, number of book is ${book.length}`)
+    res.location(`/books/${bookNo}`)
+        .status(201)
+        .json(book);
 })
 
 app.get("/books", (req,res) => res.send(books));
+
 app.get("/books/:id", (req, res) => {
     let id = req.params.id;
-    res.json(books[id]);
+    books[id] ? res.json(books[id]) : res.status(404).send("Book not found!");
 });
 
 app.delete("/books/:id", (req, res) => {
